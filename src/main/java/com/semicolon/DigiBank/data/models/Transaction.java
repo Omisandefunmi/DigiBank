@@ -1,9 +1,9 @@
 package com.semicolon.DigiBank.data.models;
 
+import com.semicolon.DigiBank.data.models.enums.TransactionType;
 import lombok.*;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 
 @Getter
 @Setter

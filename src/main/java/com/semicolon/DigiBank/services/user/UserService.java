@@ -21,4 +21,5 @@ public interface UserService {
     AccountApiResponse transferFund(TransferRequest request) throws UnsupportedDepositException, InvalidDetailsException, UnsupportedWithdrawalException, AccountNotFoundException;
     String closeAccount(DeleteAccountRequest request) throws InvalidDetailsException, AccountNotFoundException, UserDoesNotExistException;
 
+    AccountApiResponse withdraw(WithdrawalRequest request) throws InvalidDetailsException, UnsupportedWithdrawalException, AccountNotFoundException, DigiBankException;
 }

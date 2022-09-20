@@ -14,6 +14,14 @@ public class UserRepositoryImpl implements UserRepository{
     @Override
     public User saveUser(User user) {
         String accountName = user.getFirstName()+ " "+ user.getLastName();
-        return userRepo.put(accountName, user);
+         userRepo.put(accountName, user);
+        return user;
     }
+
+    @Override
+    public User findUserByAccountName(String accountName) {
+        return userRepo.get(accountName);
+    }
+
+
 }

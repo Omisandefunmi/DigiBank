@@ -12,7 +12,8 @@ public class BankRepositoryImpl implements BankRepository{
     @Override
     public User saveCustomer(User savedUser) {
         String accountNumber = generateKey(savedUser);
-        return bankUsers.put(accountNumber, savedUser);
+        bankUsers.put(accountNumber, savedUser);
+        return savedUser;
     }
 
     @Override

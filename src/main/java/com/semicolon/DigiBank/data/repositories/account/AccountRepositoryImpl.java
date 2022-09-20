@@ -27,7 +27,8 @@ public class AccountRepositoryImpl implements AccountRepository {
 
     @Override
     public Account save(Account account) {
-        return accountRepo.put(account.getAccountNumber(), account);
+         accountRepo.put(account.getAccountNumber(), account);
+         return account;
 
     }
 

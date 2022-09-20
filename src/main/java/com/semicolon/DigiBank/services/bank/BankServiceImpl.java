@@ -14,12 +14,12 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class BankServiceImpl implements BankService {
-    private BankRepository bankRepository;
-    private AccountService accountService;
+    private final BankRepository bankRepository;
+    private final AccountService accountService;
 
-    public BankServiceImpl(BankRepository bankRepository) {
-        this.bankRepository = bankRepository;
-    }
+//    public BankServiceImpl(BankRepository bankRepository) {
+//        this.bankRepository = bankRepository;
+//    }
 
     @Override
     public User saveCustomer(User savedUser) {

@@ -2,7 +2,9 @@ package com.semicolon.DigiBank.data.models;
 
 import lombok.*;
 
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
@@ -15,4 +17,5 @@ public class User {
     private String password;
     private String phoneNumber;
     private Account account;
+    private Set<Role> roles;
 }

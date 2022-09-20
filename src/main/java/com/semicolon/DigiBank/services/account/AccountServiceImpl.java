@@ -2,7 +2,7 @@ package com.semicolon.DigiBank.services.account;
 
 import com.semicolon.DigiBank.data.models.Account;
 import com.semicolon.DigiBank.data.models.Transaction;
-import com.semicolon.DigiBank.data.models.TransactionType;
+import com.semicolon.DigiBank.data.models.enums.TransactionType;
 import com.semicolon.DigiBank.data.repositories.account.AccountRepository;
 import com.semicolon.DigiBank.dtos.requests.*;
 import com.semicolon.DigiBank.dtos.responses.AccountInfoResponse;
@@ -20,15 +20,15 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
+
 public class AccountServiceImpl implements AccountService {
-    AccountRepository accountRepository;
-    ModelMapper modelMapper;
+    private final AccountRepository accountRepository;
 
 
-    public AccountServiceImpl(AccountRepository accountRepository, ModelMapper modelMapper) {
-        this.accountRepository = accountRepository;
-        this.modelMapper = modelMapper;
-    }
+//    public AccountServiceImpl(AccountRepository accountRepository, ModelMapper modelMapper) {
+//        this.accountRepository = accountRepository;
+//        this.modelMapper = modelMapper;
+//    }
 
     @Override
     public AccountApiResponse createAccount(CreateAccountRequest createAccountRequest) throws DigiBankException {
@@ -55,6 +55,7 @@ public class AccountServiceImpl implements AccountService {
         saved.setId(accountRepository.size()+"");
         return AccountApiResponse.builder()
                 .statusCode(200)
+                .account(account)
                 .message("Account creation successful with account number "+ saved.getAccountNumber())
                 .success(true)
                 .build();
