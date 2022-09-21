@@ -11,7 +11,7 @@ import com.semicolon.DigiBank.web.exceptions.*;
 import java.util.List;
 
 public interface AccountService {
-    AccountApiResponse createAccount(CreateAccountRequest createAccountRequest) throws DigiBankException;
+    AccountApiResponse createAccount(CreateAccountRequest createAccountRequest) throws DigiBankException, AccountNameAlreadyExistsException;
     AccountInfoResponse checkAccountInfo(String accountNumber) throws DigiBankException, AccountNotFoundException;
 
     AccountApiResponse makeDeposit(DepositRequest depositRequest) throws DigiBankException, UnsupportedDepositException, AccountNotFoundException;

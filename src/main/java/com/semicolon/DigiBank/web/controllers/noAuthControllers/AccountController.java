@@ -1,35 +1,27 @@
 package com.semicolon.DigiBank.web.controllers.noAuthControllers;
 
 import com.semicolon.DigiBank.dtos.requests.*;
-import com.semicolon.DigiBank.services.user.UserService;
+import com.semicolon.DigiBank.services.account.AccountService;
 import com.semicolon.DigiBank.web.exceptions.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/user")
-public class UserController {
-    private final UserService userService;
+@RequestMapping("api/v1/user")
+public class AccountController {
+    private final AccountService accountService;
 
-    public UserController(UserService userService) {
-        this.userService = userService;
+    public AccountController(AccountService accountService) {
+        this.accountService = accountService;
     }
 
-    @PostMapping("/create_account")
-    public ResponseEntity<?> openAccount(@RequestBody SignUpRequest signUpRequest){
-        try{
-            var apiResponse = userService.signUp(signUpRequest);
-            return  new ResponseEntity<>(apiResponse, HttpStatus.CREATED);
-        } catch (DigiBankException ex) {
-            return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
-        }
-    }
 
     @GetMapping("/account_info/{accountNumber}")
     public ResponseEntity<?> accountInfo(@PathVariable("accountNumber") String accountNumber) {
         try{
-            var apiResponse = userService.getAccountInfo(accountNumber);
+            var apiResponse = accountService.checkAccountInfo(accountNumber);
             return new ResponseEntity<>(apiResponse, HttpStatus.OK);
         } catch (AccountNotFoundException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
@@ -41,7 +33,7 @@ public class UserController {
     @GetMapping("/account_statement/{accountNumber}")
     public ResponseEntity<?> generateAccountStatement(@PathVariable("accountNumber") String accountNumber){
         try{
-            var apiResponse = userService.fetchAccountStatement(accountNumber);
+            var apiResponse = accountService.getAccountStatement(accountNumber);
             return new ResponseEntity<>(apiResponse, HttpStatus.FOUND);
 
         } catch (AccountNotFoundException e) {
@@ -52,7 +44,7 @@ public class UserController {
     @PostMapping("/deposit")
     public ResponseEntity<?> deposit(@RequestBody DepositRequest request){
         try {
-            var apiResponse = userService.makeDeposit(request);
+            var apiResponse = accountService.makeDeposit(request);
             return new ResponseEntity<>(apiResponse, HttpStatus.OK);
         } catch (UnsupportedDepositException | DigiBankException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_ACCEPTABLE);
@@ -64,7 +56,7 @@ public class UserController {
     @PostMapping("/withdrawal")
     public ResponseEntity<?> withdraw(@RequestBody WithdrawalRequest request) {
         try {
-            var apiResponse = userService.withdraw(request);
+            var apiResponse = accountService.withdraw(request);
             return new ResponseEntity<>(apiResponse, HttpStatus.ACCEPTED);
         }
         catch (AccountNotFoundException | DigiBankException e) {
@@ -77,7 +69,7 @@ public class UserController {
     @PostMapping("/transfer")
     public ResponseEntity<?> transfer(@RequestBody TransferRequest request) {
         try {
-            var apiResponse = userService.transferFund(request);
+            var apiResponse = accountService.transferFund(request);
             return new ResponseEntity<>(apiResponse, HttpStatus.OK);
         } catch (UnsupportedDepositException | UnsupportedWithdrawalException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
@@ -89,10 +81,18 @@ public class UserController {
     @DeleteMapping("/close_account")
     public ResponseEntity<?> closeAccount(@RequestBody DeleteAccountRequest request) {
         try {
-            var apiResponse = userService.closeAccount(request);
+            var apiResponse = accountService.deleteAccount(request);
             return new ResponseEntity<>(apiResponse, HttpStatus.NO_CONTENT);
-        } catch (InvalidDetailsException | UserDoesNotExistException | AccountNotFoundException e) {
+        } catch (InvalidDetailsException | AccountNotFoundException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
+
+    @GetMapping("/{accountName}")
+    @PreAuthorize("hasAnyRole('ADMIN')")
+    public ResponseEntity<?> findAccountByAccountName(@PathVariable("accountName") String accountName){
+        var response = accountService.findAccountByName(accountName);
+        return new ResponseEntity<>(response, HttpStatus.FOUND);
+    }
+
 }

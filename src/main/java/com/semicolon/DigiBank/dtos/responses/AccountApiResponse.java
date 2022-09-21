@@ -14,5 +14,4 @@ public class AccountApiResponse {
     private boolean success;
     private String message;
     private int statusCode;
-    private Account account;
 }

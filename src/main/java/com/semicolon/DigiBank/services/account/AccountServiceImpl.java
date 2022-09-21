@@ -9,7 +9,6 @@ import com.semicolon.DigiBank.dtos.responses.AccountInfoResponse;
 import com.semicolon.DigiBank.dtos.responses.AccountApiResponse;
 import com.semicolon.DigiBank.web.exceptions.*;
 import lombok.RequiredArgsConstructor;
-import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -31,7 +30,7 @@ public class AccountServiceImpl implements AccountService {
 //    }
 
     @Override
-    public AccountApiResponse createAccount(CreateAccountRequest createAccountRequest) throws DigiBankException {
+    public AccountApiResponse createAccount(CreateAccountRequest createAccountRequest) throws DigiBankException, AccountNameAlreadyExistsException {
         Account account = accountRepository.findAccountByName(createAccountRequest.getAccountName());
         if(account != null){
             throw new AccountNameAlreadyExistsException(createAccountRequest.getAccountName()+" already exists");
@@ -43,7 +42,7 @@ public class AccountServiceImpl implements AccountService {
             throw new DigiBankException("Account pin cannot be greater or lesser than 4");
         }
 
-        account = Account.builder()
+         account = Account.builder()
                 .name(createAccountRequest.getAccountName())
                 .pin(createAccountRequest.getPin())
                 .build();
@@ -55,7 +54,6 @@ public class AccountServiceImpl implements AccountService {
         saved.setId(accountRepository.size()+"");
         return AccountApiResponse.builder()
                 .statusCode(200)
-                .account(account)
                 .message("Account creation successful with account number "+ saved.getAccountNumber())
                 .success(true)
                 .build();

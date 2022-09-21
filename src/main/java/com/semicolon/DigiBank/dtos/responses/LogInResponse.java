@@ -6,9 +6,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @AllArgsConstructor
-@NoArgsConstructor
-@Builder
-@Setter
 public class LogInResponse {
     private boolean success;
     private String accessToken;

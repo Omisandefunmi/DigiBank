@@ -32,8 +32,7 @@ public class ApplicationSecurityConfig {
         http.cors().and().csrf().disable()
                 .authorizeHttpRequests(authorize -> {
                     try {
-                        authorize.antMatchers("/user/**").permitAll()
-                                .antMatchers("/auth/**").permitAll()
+                        authorize.antMatchers("**/auth/**").permitAll()
                                 .antMatchers("/customError").permitAll()
                                 .antMatchers("/access-denied").permitAll()
 

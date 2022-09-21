@@ -1,6 +1,6 @@
 package com.semicolon.DigiBank.web.exceptions;
 
-public class AccountNameAlreadyExistsException extends DigiBankException {
+public class AccountNameAlreadyExistsException extends Exception {
     public AccountNameAlreadyExistsException(String message) {
         super(message);
     }
