@@ -6,7 +6,6 @@ import com.semicolon.DigiBank.dtos.responses.LogInResponse;
 import com.semicolon.DigiBank.security.jwt.TokenProvider;
 import com.semicolon.DigiBank.services.user.UserService;
 import com.semicolon.DigiBank.web.exceptions.AccountNameAlreadyExistsException;
-import com.semicolon.DigiBank.web.exceptions.AccountNotFoundException;
 import com.semicolon.DigiBank.web.exceptions.DigiBankException;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -30,9 +29,9 @@ public class AuthController {
     private final AuthenticationManager authenticationManager;
     private final TokenProvider tokenProvider;
 
-    @SneakyThrows
+
     @PostMapping("/create_account")
-    public ResponseEntity<?> openAccount(@RequestBody SignUpRequest signUpRequest){
+    public ResponseEntity<?> openAccount(@RequestBody SignUpRequest signUpRequest) throws AccountNameAlreadyExistsException, DigiBankException {
             var apiResponse = userService.signUp(signUpRequest);
             return  new ResponseEntity<>(apiResponse, HttpStatus.CREATED);
 

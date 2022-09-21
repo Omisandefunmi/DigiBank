@@ -9,7 +9,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("api/v1/user")
+@RequestMapping("api/v1/accounts")
 public class AccountController {
     private final AccountService accountService;
 
@@ -19,73 +19,43 @@ public class AccountController {
 
 
     @GetMapping("/account_info/{accountNumber}")
-    public ResponseEntity<?> accountInfo(@PathVariable("accountNumber") String accountNumber) {
-        try{
+    public ResponseEntity<?> accountInfo(@PathVariable("accountNumber") String accountNumber) throws AccountNotFoundException, DigiBankException {
             var apiResponse = accountService.checkAccountInfo(accountNumber);
             return new ResponseEntity<>(apiResponse, HttpStatus.OK);
-        } catch (AccountNotFoundException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
-        } catch (DigiBankException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        }
+
     }
 
     @GetMapping("/account_statement/{accountNumber}")
-    public ResponseEntity<?> generateAccountStatement(@PathVariable("accountNumber") String accountNumber){
-        try{
+    public ResponseEntity<?> generateAccountStatement(@PathVariable("accountNumber") String accountNumber) throws AccountNotFoundException {
             var apiResponse = accountService.getAccountStatement(accountNumber);
             return new ResponseEntity<>(apiResponse, HttpStatus.FOUND);
 
-        } catch (AccountNotFoundException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
-        }
     }
 
     @PostMapping("/deposit")
-    public ResponseEntity<?> deposit(@RequestBody DepositRequest request){
-        try {
+    public ResponseEntity<?> deposit(@RequestBody DepositRequest request) throws UnsupportedDepositException, AccountNotFoundException, DigiBankException {
             var apiResponse = accountService.makeDeposit(request);
             return new ResponseEntity<>(apiResponse, HttpStatus.OK);
-        } catch (UnsupportedDepositException | DigiBankException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_ACCEPTABLE);
-        } catch (AccountNotFoundException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
-        }
+
     }
 
     @PostMapping("/withdrawal")
-    public ResponseEntity<?> withdraw(@RequestBody WithdrawalRequest request) {
-        try {
+    public ResponseEntity<?> withdraw(@RequestBody WithdrawalRequest request) throws InvalidDetailsException, UnsupportedWithdrawalException, AccountNotFoundException, DigiBankException {
             var apiResponse = accountService.withdraw(request);
             return new ResponseEntity<>(apiResponse, HttpStatus.ACCEPTED);
-        }
-        catch (AccountNotFoundException | DigiBankException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
-        } catch (InvalidDetailsException | UnsupportedWithdrawalException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_ACCEPTABLE);
-        }
     }
 
     @PostMapping("/transfer")
-    public ResponseEntity<?> transfer(@RequestBody TransferRequest request) {
-        try {
+    public ResponseEntity<?> transfer(@RequestBody TransferRequest request) throws UnsupportedDepositException, InvalidDetailsException, UnsupportedWithdrawalException, AccountNotFoundException {
             var apiResponse = accountService.transferFund(request);
             return new ResponseEntity<>(apiResponse, HttpStatus.OK);
-        } catch (UnsupportedDepositException | UnsupportedWithdrawalException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        } catch (InvalidDetailsException | AccountNotFoundException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
-        }
     }
 
     @DeleteMapping("/close_account")
-    public ResponseEntity<?> closeAccount(@RequestBody DeleteAccountRequest request) {
-        try {
+    public ResponseEntity<?> closeAccount(@RequestBody DeleteAccountRequest request) throws InvalidDetailsException, AccountNotFoundException {
             var apiResponse = accountService.deleteAccount(request);
             return new ResponseEntity<>(apiResponse, HttpStatus.NO_CONTENT);
-        } catch (InvalidDetailsException | AccountNotFoundException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
-        }
+
     }
 
     @GetMapping("/{accountName}")
