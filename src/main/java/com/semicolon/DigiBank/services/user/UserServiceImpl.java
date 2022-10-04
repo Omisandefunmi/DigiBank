@@ -68,6 +68,16 @@ public class UserServiceImpl implements UserService, UserDetailsService {
                 .build();
     }
 
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        User user = userRepository.findUserByAccountName(username);
+        if(user != null){
+            return new org.springframework.security.core.userdetails.User(user.getAccount().getAccountNumber(),
+                    user.getPassword(), getAuthorities(user.getRoles()));
+        }
+        return null;
+    }
+
     private void assignDefaultRoleTypeTo(User user) {
         Set<RoleType> userRoles = user.getRoles();
         if(userRoles == null){
@@ -109,15 +119,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         return firstName + " "+ lastName;
     }
 
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findUserByAccountName(username);
-        if(user != null){
-            return new org.springframework.security.core.userdetails.User(user.getAccount().getAccountNumber(),
-                    user.getPassword(), getAuthorities(user.getRoles()));
-        }
-        return null;
-    }
+
 
     private Collection<? extends GrantedAuthority> getAuthorities(Set<RoleType> roles){
         return roles.stream().map(

@@ -31,7 +31,7 @@ public class AuthController {
 
 
     @PostMapping("/create_account")
-    public ResponseEntity<?> openAccount(@RequestBody SignUpRequest signUpRequest) throws AccountNameAlreadyExistsException, DigiBankException {
+    public ResponseEntity<?> openAccount(@RequestBody SignUpRequest signUpRequest){
             var apiResponse = userService.signUp(signUpRequest);
             return  new ResponseEntity<>(apiResponse, HttpStatus.CREATED);
 

@@ -1,6 +1,5 @@
 package com.semicolon.DigiBank.dtos.responses;
 
-import com.semicolon.DigiBank.data.models.Account;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

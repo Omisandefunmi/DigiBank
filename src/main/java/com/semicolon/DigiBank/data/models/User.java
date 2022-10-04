@@ -2,8 +2,6 @@ package com.semicolon.DigiBank.data.models;
 
 import com.semicolon.DigiBank.data.models.enums.RoleType;
 import lombok.*;
-
-import java.util.HashSet;
 import java.util.Set;
 
 @AllArgsConstructor

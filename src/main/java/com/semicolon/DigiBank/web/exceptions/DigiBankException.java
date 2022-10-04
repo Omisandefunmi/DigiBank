@@ -1,6 +1,6 @@
 package com.semicolon.DigiBank.web.exceptions;
 
-public class DigiBankException extends Exception{
+public class DigiBankException extends RuntimeException{
 
     private int statusCode;
 
